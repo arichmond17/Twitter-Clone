@@ -1,0 +1,63 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+
+<section class="content">
+    <div class="header">
+        <img src="{% static 'img/twitter.png' %}" alt="" class="logo">
+        <h1>Home</h1>
+    </div>
+
+
+
+<section class="post_form">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+        <input type="text" name="name" placeholder="Enter your name">
+        <input type="text" name="body" placeholder="What's happening">
+        <div class="my-icon">
+            <input type="file" name="image">
+            <button type="submit"> Tweet</button>
+        </div>
+        
+    </form>
+</section>
+
+<section class="posts">
+    <ul>
+        {% for post in posts %}
+        <li>
+            <img src="{% static 'img/MENU.png' %}" alt="" class="menu_icon js-menu-icon">
+            <div class="menu">
+
+                <a href="/delete/{{post.id}}">Delete</a> <br>
+                <a href="/edit/{{post.id}}">Edit</a>
+
+            </div>
+            <div class="logo">
+                <img src="{% static 'img/user.png' %}" alt="">
+            </div>
+            <div class="name_body">
+                <div class="name">{{post.name}}</div>
+                <div class="datetim">{{post.created_at}}</div>
+                <br>
+                <div class="body">
+                   <p>{{post.body}}</p> 
+                   {% if post.image.url %}
+                   <img src="{{post.image.url}}" class="post-border"alt="">
+                   {% endif %}
+                </div>
+                <form action="{% url 'like_post' post.pk %}" method="POST" id="likes-form">
+                    {% csrf_token %}
+                    <div class="row">
+                    <button class="like-button" type="submit" ,name="post_id", value="{{post.id}}">&#10084;</button>
+                    <div class="likes-count">{{post.likes}}</div>
+                </div>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+<script src="{% static 'js/posts.js' %}"></script>
+</section>
+{% endblock %}
